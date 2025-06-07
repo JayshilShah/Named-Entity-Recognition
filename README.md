@@ -106,10 +106,10 @@ INFO:     Uvicorn running on http://127.0.0.1:8000
 ## 📸 Screenshots
 
 ### Example 1
-![Example 1](Screenshots/SS4.png)
+![Example 1](Screenshots/SS4.PNG)
 
 ### Example 2
-![Example 2](Screenshots/SS6.png)
+![Example 2](Screenshots/SS6.PNG)
 
 ---
 
