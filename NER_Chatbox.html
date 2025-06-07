@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PrivChat – NER</title>
+  <style>
+    body { background: #121212; color: #E0E0E0; font-family: sans-serif; padding: 20px; }
+    input, button { padding: 8px; font-size: 16px; }
+    button { background-color: #00FF66; border: none; cursor: pointer; color: black; }
+    .highlight { background-color: #444; padding: 2px 6px; border-radius: 6px; margin: 0 2px; }
+    .pii-item { margin-top: 10px; padding: 10px; border-radius: 8px; background-color: #1e1e1e; }
+  </style>
+</head>
+<body>
+
+  <h2>PrivChat – Named Entity Detection & LLM Response</h2>
+
+  <div style="margin-bottom: 10px;">
+    <input type="text" id="userPrompt" placeholder="Enter your prompt..." style="width: 70%;" />
+    <button onclick="sendPrompt()">Send</button>
+  </div>
+
+  <div style="margin-top: 20px;">
+    <strong>Detected Entities:</strong>
+    <div id="chatExample" style="margin-top: 10px; font-size: 18px;"></div>
+    <div id="piiItemsList" style="margin-top: 10px;"></div>
+  </div>
+
+  <div style="margin-top: 30px;">
+    <strong>LLM Response:</strong>
+    <div id="llmResponse" style="margin-top: 10px; font-style: italic;"></div>
+  </div>
+
+  <script>
+    async function sendPrompt() {
+      const prompt = document.getElementById("userPrompt").value;
+      if (!prompt) return alert("Please enter a prompt.");
+
+      const response = await fetch("http://localhost:8000/process/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt })
+      });
+
+      const data = await response.json();
+
+      // Replace entity text with highlights
+      let highlightedText = prompt;
+      data.entities.forEach(ent => {
+        const regex = new RegExp(ent.text, "g");
+        highlightedText = highlightedText.replace(regex, `<span class="highlight">${ent.text}</span>`);
+      });
+      document.getElementById("chatExample").innerHTML = highlightedText;
+
+      // Group entities by label
+      const grouped = {};
+
+      data.entities.forEach(ent => {
+        if (!grouped[ent.label]) grouped[ent.label] = new Set();
+        grouped[ent.label].add(ent.text);
+      });
+
+      const piiList = Object.entries(grouped).map(([label, texts]) => {
+        return `<div class="pii-item"><strong>${label}</strong>: ${[...texts].join(", ")}</div>`;
+      }).join("");
+      
+      document.getElementById("piiItemsList").innerHTML = piiList;
+
+      // Display LLM output
+      document.getElementById("llmResponse").innerText = data.llm_response || "No response from LLM.";
+    }
+  </script>
+
+</body>
+</html>
