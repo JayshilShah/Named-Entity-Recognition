@@ -29,7 +29,7 @@ async def process_prompt(data: PromptRequest):
     # Call Ollama (streamed response)
     response = requests.post(
         "http://localhost:11434/api/generate",
-        json={"model": "llama3", "prompt": prompt},
+        json={"model": "gemma3:1b", "prompt": prompt},
         stream=True
     )
 
