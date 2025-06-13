@@ -18,7 +18,7 @@ This project is a lightweight NLP chat application that highlights named entitie
 - FastAPI
 - Uvicorn
 - requests
-- Ollama (with a model like `llama3`)
+- Ollama (with models like `llama3`, `gemma`, etc.)
 
 ---
 
@@ -49,7 +49,7 @@ python -m spacy download en_core_web_sm
 - Download and install Ollama: [https://ollama.com/download](https://ollama.com/download)
 - Start the model:
 ```bash
-ollama run llama3
+ollama run gemma3:1b
 ```
 
 > ✅ Keep this terminal running. This serves your local LLM at port `11434`.
@@ -99,7 +99,7 @@ INFO:     Uvicorn running on http://127.0.0.1:8000
   ORG: Facebook, Meta
   GPE: California
   ```
-- **LLM Response**: _(Generated locally using llama3)_
+- **LLM Response**: _(Generated locally using llama3 or gemma)_
 
 ---
 
